@@ -237,7 +237,7 @@ public class OneSeverList1 implements Serializable {
 
         @Override
         public int compareTo(RowsDTO o) {
-            return o.id - this.id;
+            return o.sort - this.sort;
         }
 
         public static class ParamsDTO implements Serializable {

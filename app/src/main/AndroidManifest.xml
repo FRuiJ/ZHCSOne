@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ZHCSone"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Ui.MainNewsList"></activity>
+        <activity android:name=".Ui.SubwayContextAct"></activity>
+        <activity android:name=".Ui.SubwayListAct" />
+        <activity android:name=".Ui.MainNewsListAct" />
         <activity android:name=".Ui.MainWebAct" />
         <activity android:name=".Ui.StartAct" />
         <activity android:name=".Ui.MainActivity">

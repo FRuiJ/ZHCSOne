@@ -5,19 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Ui.MainNewsListAct">
+    tools:context=".Ui.SubwayContextAct">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/news_list_tb"
+        android:id="@+id/sub_tb"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="新闻列表" />
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/news_list_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <Button
+            android:id="@+id/sub_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </androidx.appcompat.widget.Toolbar>
 
 </LinearLayout>

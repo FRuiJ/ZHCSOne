@@ -3,6 +3,7 @@ package com.example.zhcsone.Ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -34,10 +35,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainNewsList extends AppCompatActivity {
+public class MainNewsListAct extends AppCompatActivity {
 
+    String tv1 = "tv1";
+    String iv1 = "iv1";
     OneEditText1 oneEditText1;
+    List<Map<String, String>> mapList = new ArrayList<>();
     OkHttpClient okHttpClient = new OkHttpClient();
+    MyRvAdapter<Map<String, String>> myRvAdapter;
+
     String IP = "http://172.17.36.212:10002";
     RecyclerView recyclerView;
     Handler handler = new Handler() {
@@ -63,32 +69,30 @@ public class MainNewsList extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        myRvAdapter = new MyRvAdapter<>(this, mapList, R.layout.news_list, new MyRvAdapter.CallBack<Map<String, String>>() {
+            @Override
+            public void item(MyRvAdapter.ViewHolder viewHolder, Map<String, String> data, int position) {
+                TextView textView = (TextView) viewHolder.getControls(R.id.news_title);
+                textView.setText(data.get(tv1));
+                ImageView imageView = (ImageView) viewHolder.getControls(R.id.news_iv);
+                Glide.with(getApplicationContext()).load(data.get(iv1)).into(imageView);
+            }
+        });
+        recyclerView.setAdapter(myRvAdapter);
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
         initHttp(url);
     }
 
     private void initRv() {
-        String tv1 = "tv1";
-        String iv1 = "iv1";
         List<OneEditText1.RowsDTO> rows = oneEditText1.getRows();
-        List<Map<String, String>> mapList = new ArrayList<>();
         for (int i = 0; i < rows.size(); i++) {
             Map<String, String> map = new HashMap<>();
             map.put(tv1, rows.get(i).getTitle());
             map.put(iv1, IP + rows.get(i).getCover());
             mapList.add(map);
         }
-        MyRvAdapter<Map<String, String>> myRvAdapter = new MyRvAdapter<>(this, mapList, R.layout.news_list, new MyRvAdapter.CallBack<Map<String, String>>() {
-            @Override
-            public void item(MyRvAdapter.ViewHolder viewHolder, Map<String, String> data, int position) {
-                TextView textView = (TextView) viewHolder.getControls(R.id.news_title);
-                textView.setText(data.get(tv1));
-                ImageView imageView = (ImageView) viewHolder.getControls(R.id.news_iv);
-                Glide.with(MainNewsList.this).load(data.get(iv1)).into(imageView);
-            }
-        });
-        recyclerView.setAdapter(myRvAdapter);
+        myRvAdapter.notifyDataSetChanged();
     }
 
     private void initHttp(String url) {

@@ -6,13 +6,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.zhcsone.Adp.MyLvAdapter;
 import com.example.zhcsone.Adp.MyPageAdp;
-import com.example.zhcsone.Adp.MyRvAdapter;
-import com.example.zhcsone.JsonData.OneEditText1;
 import com.example.zhcsone.JsonData.OneNews;
 import com.example.zhcsone.JsonData.OneNewsFen;
 import com.example.zhcsone.JsonData.OnePager1;
@@ -45,9 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -58,7 +50,6 @@ import okhttp3.Response;
 
 public class MainOneFragment extends Fragment {
 
-    private static final String TAG = "MainOneFragment";
     int x;
     int y = 0;
 
@@ -74,7 +65,6 @@ public class MainOneFragment extends Fragment {
     List<ImageView> imageViewList = new ArrayList<>();
     OkHttpClient okHttpClient = new OkHttpClient();
     List<OneSeverList1.RowsDTO> rowsDTOS;
-    List<Bitmap> listIcon = new ArrayList<>();
     Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -97,7 +87,7 @@ public class MainOneFragment extends Fragment {
                     viewPager1.setCurrentItem(x);
                     break;
                 case 2:
-                    initIcon();
+//                    initIcon();
                     break;
                 case 3:
                     initLinearLayout1A();
@@ -116,7 +106,6 @@ public class MainOneFragment extends Fragment {
 
 
     OnePager1 onePager1;
-    OneEditText1 oneEditText1;
     OneSeverList1 oneSeverList1;
     OneNews oneNews;
     OneNewsFen oneNewsFen;
@@ -257,42 +246,14 @@ public class MainOneFragment extends Fragment {
         });
     }// 加载新闻分类
 
-
-    private void initIcon() {
-        synchronized (this) {
-            System.out.println(rowsDTOS.size());
-            for (int i = 0; i < rowsDTOS.size(); i++) {
-                Request request = new Request.Builder().url(IP + rowsDTOS.get(i).getImgUrl()).build();
-                Call call = okHttpClient.newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        System.out.println("失败initIcon");
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
-                        listIcon.add(bitmap);
-                    }
-                });
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-        handler.sendEmptyMessage(3);
-    }// 准备两行图标图片
-
     private void initLinearLayout1A() {
         for (int i = 0; i < 5; i++) {
             LayoutInflater layoutInflater = getLayoutInflater();
             View ll1 = layoutInflater.inflate(R.layout.sever_icon, null);
             ImageView imageView = ll1.findViewById(R.id.one_icon_iv);
-            imageView.setImageBitmap(listIcon.get(i));
+            System.out.println(IP + rowsDTOS.get(i).getImgUrl());
+            Glide.with(getContext()).load(IP + rowsDTOS.get(i).getImgUrl()).into(imageView);
+//            imageView.setImageBitmap(listIcon.get(i));
             TextView textView = ll1.findViewById(R.id.one_icon_tv);
             textView.setText(rowsDTOS.get(i).getServiceName());
             ll1.setLayoutParams(new LinearLayout.LayoutParams(
@@ -308,15 +269,20 @@ public class MainOneFragment extends Fragment {
             LayoutInflater layoutInflater = getLayoutInflater();
             View ll1 = layoutInflater.inflate(R.layout.sever_icon, null);
             ImageView imageView = ll1.findViewById(R.id.one_icon_iv);
-            imageView.setImageBitmap(listIcon.get(i));
+            Glide.with(getContext()).load(IP + rowsDTOS.get(i).getImgUrl()).into(imageView);
+//            imageView.setImageBitmap(listIcon.get(i));
             TextView textView = ll1.findViewById(R.id.one_icon_tv);
             textView.setText(rowsDTOS.get(i).getServiceName());
             ll1.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-            int finalI = i;
+            int finalI1 = i;
             ll1.setOnClickListener(v -> {
-                Toast toast = Toast.makeText(getContext(), "" + rowsDTOS.get(finalI).getId(), Toast.LENGTH_SHORT);
-                toast.show();
+                switch (rowsDTOS.get(finalI1).getId()) {
+                    case 2:
+                        SubwayListAct subwayListAct = new SubwayListAct();
+                        subwayListAct.actionStart(getContext());
+                        break;
+                }
             });
             linearLayout2.addView(ll1);
         }
@@ -336,7 +302,7 @@ public class MainOneFragment extends Fragment {
                 oneSeverList1 = new Gson().fromJson(response.body().string(), OneSeverList1.class);
                 rowsDTOS = oneSeverList1.getRows();
                 Collections.sort(rowsDTOS);
-                handler.sendEmptyMessage(2);
+                handler.sendEmptyMessage(3);
             }
         });
     }// 第一次加载两行图标数据
@@ -346,7 +312,7 @@ public class MainOneFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    MainNewsList mainNewsList = new MainNewsList();
+                    MainNewsListAct mainNewsList = new MainNewsListAct();
                     mainNewsList.actionStart(getContext(), url0 + editText1.getText().toString());
                 }
                 return false;

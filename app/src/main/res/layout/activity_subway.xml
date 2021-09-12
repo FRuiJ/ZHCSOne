@@ -5,19 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Ui.MainNewsListAct">
+    tools:context=".Ui.SubwayListAct">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/news_list_tb"
+        android:id="@+id/subway_list_tb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="新闻列表" />
+        app:title="城市地铁" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/news_list_rv"
+        android:id="@+id/subway_list_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

@@ -25,6 +25,8 @@
                 android:hint="请输入文字搜索"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:lines="1"
                 android:paddingLeft="20dp" />
 
@@ -150,7 +152,7 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/one_vp2"
                     android:layout_width="match_parent"
-                    android:layout_height="1100dp" />
+                    android:layout_height="1300dp" />
 
             </LinearLayout>
 
