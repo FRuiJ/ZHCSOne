@@ -10,6 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/sub_tb"
         android:layout_width="match_parent"
+<<<<<<< Updated upstream
         android:layout_height="wrap_content" />
 
     <ScrollView
@@ -183,5 +184,20 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+=======
+        android:layout_height="wrap_content"
+        android:gravity="right">
 
+        <Button
+            android:id="@+id/sub_but"
+            android:gravity=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </androidx.appcompat.widget.Toolbar>
+>>>>>>> Stashed changes
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 </LinearLayout>
