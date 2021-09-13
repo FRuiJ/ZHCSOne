@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.zhcsone.Adp.MyPageFragAdp;
@@ -35,9 +36,6 @@ public class MainActivity extends AppCompatActivity {
     MyPageFragAdp myPageFragAdp;
     List<Fragment> fragmentList = new ArrayList<>();
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,21 +48,53 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+
         initA();
-        initB(); // 加载Gson
+
         myPageFragAdp = new MyPageFragAdp(getSupportFragmentManager(), fragmentList.size(), fragmentList);
         viewPager.setAdapter(myPageFragAdp);
 
-    }
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                for (int i = 0; i < radioGroup.getChildCount(); i++) {
+                    RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                    if (radioButton.isChecked()) {
+                        viewPager.setCurrentItem(i);
+                    }
+                }
+            }
+        });
 
-    private void initB() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                radioGroup.check(radioGroup.getChildAt(position).getId());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
     private void initA() {
         viewPager = findViewById(R.id.main_vp);
         radioGroup = findViewById(R.id.main_rg);
+        radioGroup.check(radioGroup.getChildAt(0).getId());
+
         fragmentList.add(new MainOneFragment());
+        fragmentList.add(new MainFiveFrag());
+        fragmentList.add(new MainFiveFrag());
+        fragmentList.add(new MainFiveFrag());
+        fragmentList.add(new MainFiveFrag());
 
     }
 

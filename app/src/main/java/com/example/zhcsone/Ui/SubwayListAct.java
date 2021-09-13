@@ -10,8 +10,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zhcsone.Adp.MyRvAdapter;
 import com.example.zhcsone.AdpData.SubwayListItem;
@@ -60,8 +62,8 @@ public class SubwayListAct extends AppCompatActivity {
         for (int i = 0; i < subListData.getData().size(); i++) {
             SubListData.DataDTO dataDTO = subListData.getData().get(i);
             subwayListItem = new SubwayListItem(dataDTO.getLineName(),
-                    "下一站" + dataDTO.getNextStep().getName(),
-                    dataDTO.getReachTime() + "分钟后到达", dataDTO.getLineId() + "");
+                    dataDTO.getNextStep().getName(),
+                    dataDTO.getReachTime() + "", dataDTO.getLineId() + "");
             listItems.add(subwayListItem);
         }
         myRvAdapter.notifyDataSetChanged();
@@ -78,6 +80,7 @@ public class SubwayListAct extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+
         recyclerView = findViewById(R.id.subway_list_rv);
         myRvAdapter = new MyRvAdapter<>(getApplication(), listItems, R.layout.subwaylist_item, new MyRvAdapter.CallBack<SubwayListItem>() {
             @Override
@@ -86,11 +89,12 @@ public class SubwayListAct extends AppCompatActivity {
                 TextView textView2 = (TextView) viewHolder.getControls(R.id.subway_list_tv2);
                 TextView textView3 = (TextView) viewHolder.getControls(R.id.subway_list_tv3);
                 textView1.setText(data.getTv1());
-                textView2.setText(data.getTv2());
-                textView3.setText(data.getTv3());
+                textView2.setText("下一站" + data.getTv2());
+                textView3.setText(data.getTv3() + "分钟后到达");
                 viewHolder.itemView.setOnClickListener(v -> {
                     SubwayContextAct subwayContextAct = new SubwayContextAct();
-                    subwayContextAct.actionStart(getApplicationContext(), data.getId(), data.getTv1());
+                    subwayContextAct.actionStart(getApplicationContext(), data.getId(),
+                            data.getTv1(), data.getTv2(), data.getTv3());
                 });
             }
         });
@@ -114,9 +118,19 @@ public class SubwayListAct extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(1, 100, 1, "总览图页面");
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        }
+        if (item.getItemId() == 100) {
+            SubwayMapAct subwayMapAct = new SubwayMapAct();
+            subwayMapAct.actionStart(this);
         }
         return super.onOptionsItemSelected(item);
     }
