@@ -12,10 +12,13 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.zhcsone.Adp.MyOkhttp;
+import com.example.zhcsone.JsonData.UserMainData;
 import com.example.zhcsone.R;
 
 public class UserOneAct extends AppCompatActivity {
 
+    UserMainData userMainData;
     ImageView imageView1;
     EditText editText1, editText2, editText3;
     String url = "http://172.17.36.212:10002/prod-api/api/common/user"; // 修改个人信息
@@ -33,7 +36,12 @@ public class UserOneAct extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         intiView();
+        initHttp();
 
+    }
+
+    private void initHttp() {
+        MyOkhttp myOkhttp = new MyOkhttp();
     }
 
     private void intiView() {
