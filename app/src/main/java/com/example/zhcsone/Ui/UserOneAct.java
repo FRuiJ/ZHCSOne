@@ -7,14 +7,26 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.zhcsone.Adp.MyOkhttp;
 import com.example.zhcsone.JsonData.UserMainData;
 import com.example.zhcsone.R;
+import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class UserOneAct extends AppCompatActivity {
 
@@ -26,6 +38,27 @@ public class UserOneAct extends AppCompatActivity {
             "lNzA5MDM1MDU0OSJ9.KhR4ur4a-vHsRideth12b9HGYsYVpY5_rM4LrOtYcVQR0xu2lfSL7Iu-m-fACNXbMHwJEkCYnk5Vvjj7cuY3Vw";
     String ch = "http://172.17.36.212:10002/prod-api";
     String url1 = " http://172.17.36.212:10002/prod-api/api/common/user/getInfo"; // 查询个人基本信息
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    initEt();
+                    break;
+            }
+        }
+    };
+
+    private void initEt() {
+        Glide.with(this).load(ch + userMainData.getUser().getAvatar()).into(imageView1);
+        editText1.setText(userMainData.getUser().getNickName());
+        if (Integer.parseInt(userMainData.getUser().getSex()) == 0) {
+            editText1.setText("男");
+        } else editText1.setText("女");
+        editText1.setText(userMainData.getUser().getPhonenumber());
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +74,18 @@ public class UserOneAct extends AppCompatActivity {
     }
 
     private void initHttp() {
-        MyOkhttp myOkhttp = new MyOkhttp();
+        MyOkhttp.getToken(url1, token, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                System.out.println("UserOneAct失败1");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                userMainData = new Gson().fromJson(response.body().string(), UserMainData.class);
+                handler.sendEmptyMessage(0);
+            }
+        });
     }
 
     private void intiView() {
